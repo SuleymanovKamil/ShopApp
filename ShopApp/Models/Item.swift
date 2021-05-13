@@ -9,7 +9,7 @@ import Foundation
 
 struct Item: Hashable{
     let name: String
-    let price: Int
+    let price: Double
     let quantity: Int?
     let description: String?
     let image: String?

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BasketView: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var basket: BasketViewModel
+    let paymentHandler = PaymentHandler()
     
     var body: some View {
         VStack (alignment: .leading){
@@ -20,14 +20,14 @@ struct BasketView: View {
                 
                 Spacer()
                 
-                Text("\(basket.basket.count)")
+                Text("\(store.basket.count)")
                     .bold()
             }
             .font(.title3)
             .padding()
             
             List{
-                    ForEach(basket.basket, id: \.self) { item in
+                    ForEach(store.basket, id: \.self) { item in
                         HStack {
                     
                             Image(item.item.image!)
@@ -51,24 +51,32 @@ struct BasketView: View {
                         }
                     }
                     .onDelete(perform: delete)
-                   
-                
-            
             }
             
             HStack {
-                Button(action: {}, label: {
-                    Text("Заказать")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 20)
-                    .background(Color.primary.cornerRadius(10))
+                
+              
+                Button(action: {
+                    paymentHandler.ammount = Double(store.totalSum)
+                    paymentHandler.startPayment { (success) in
+                        if success {
+                            print("Success")
+                            store.basket.removeAll()
+                        } else {
+                            print("Failed")
+                        }
+                }
+                }, label: {
+                    Text("Заплатить с Pay")
+                        .foregroundColor(Color("darkMode"))
+                        .padding(10)
+                        .padding(.horizontal)
+                        .background(Color.primary.cornerRadius(5))
                 })
 
                 
                 Spacer()
-                Text("Итого: \(basket.totalSum)₽")
+                Text("Итого: \(store.totalSum)₽")
                     .font(.title3)
                     .bold()
                    
@@ -79,7 +87,7 @@ struct BasketView: View {
         }
     }
     func delete(at offsets: IndexSet) {
-        basket.basket.remove(atOffsets: offsets)
+        store.basket.remove(atOffsets: offsets)
        }
 }
 
@@ -87,7 +95,6 @@ struct BasketView_Previews: PreviewProvider {
     static var previews: some View {
         BasketView()
             .environmentObject(Store())
-            .environmentObject(BasketViewModel())
     }
 }
 

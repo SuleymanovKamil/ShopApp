@@ -9,7 +9,6 @@ import SwiftUI
 
 struct Catalog: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var basket: BasketViewModel
     
     var body: some View {
         VStack (alignment: .leading, spacing: 0){
@@ -47,7 +46,7 @@ struct Catalog: View {
                     ForEach(store.currentItems, id: \.self) { item in
                         
                         NavigationLink(
-                            destination: ItemDetailView(item: item).environmentObject(basket),
+                            destination: ItemDetailView(item: item).environmentObject(store),
                             label: {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.white)
@@ -66,6 +65,7 @@ struct Catalog: View {
                                             VStack (spacing: 4){
                                                 Text(item.name)
                                                     .font(.system(.headline, design: .rounded))
+                                                    .foregroundColor(.black)
                                                     .lineLimit(1)
                                                 
                                                 HStack {
@@ -75,6 +75,7 @@ struct Catalog: View {
                                                         .opacity(0)
                                                     
                                                     Text("\(item.price)₽")
+                                                        .foregroundColor(.black)
                                                     
                                                     Image(systemName: "plus.circle.fill")
                                                         .font(.title3)

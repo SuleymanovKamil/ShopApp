@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainscreenView: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var basket: BasketViewModel
     
     var body: some View {
         VStack (alignment: .leading){
@@ -24,17 +23,17 @@ struct MainscreenView: View {
                 
                 Spacer()
             }
-            .edgesIgnoringSafeArea(.bottom)
         }
-        .environmentObject(basket)
+        .onTapGesture {
+            hideKeyboard()
+        }
       
     }
 }
 
 struct MainscreenView_Previews: PreviewProvider {
     static var previews: some View {
-        MainscreenView()
-            .environmentObject(Store())
+        ContentView()
     }
 }
 

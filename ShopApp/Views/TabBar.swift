@@ -30,7 +30,7 @@ struct TabBar: View {
                 }
                 
            
-            Text("Профиль")
+            AccountView()
                 .navigationBarHidden(true)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)).opacity(0.05).ignoresSafeArea())

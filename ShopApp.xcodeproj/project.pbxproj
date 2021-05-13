@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B0455EB264B4ED30066640D /* OrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0455EA264B4ED30066640D /* OrderView.swift */; };
+		6B0455ED264DD1DB0066640D /* ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0455EC264DD1DB0066640D /* ApplePay.swift */; };
+		6B0455F0264DDD0F0066640D /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0455EF264DDD0F0066640D /* AccountView.swift */; };
 		6B1FAD1D2648002800603C6D /* ShopAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD1C2648002800603C6D /* ShopAppApp.swift */; };
 		6B1FAD1F2648002800603C6D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD1E2648002800603C6D /* ContentView.swift */; };
 		6B1FAD212648002A00603C6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B1FAD202648002A00603C6D /* Assets.xcassets */; };
@@ -14,7 +17,6 @@
 		6B1FAD2C2648010F00603C6D /* MainscreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD2B2648010F00603C6D /* MainscreenView.swift */; };
 		6B1FAD2E2648023300603C6D /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD2D2648023300603C6D /* TabBar.swift */; };
 		6B1FAD312648050E00603C6D /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 6B1FAD302648050E00603C6D /* Introspect */; };
-		6B1FAD36264807E600603C6D /* MainscreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD35264807E600603C6D /* MainscreenViewModel.swift */; };
 		6B1FAD382648081900603C6D /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD372648081900603C6D /* Store.swift */; };
 		6B1FAD3A2648089800603C6D /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD392648089800603C6D /* SearchBar.swift */; };
 		6B1FAD3C26480AF800603C6D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD3B26480AF800603C6D /* Constants.swift */; };
@@ -22,12 +24,14 @@
 		6B1FAD4126486C3400603C6D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD4026486C3400603C6D /* Item.swift */; };
 		6B1FAD4326493DAA00603C6D /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD4226493DAA00603C6D /* Catalog.swift */; };
 		6B1FAD45264946D400603C6D /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD44264946D400603C6D /* ItemDetailView.swift */; };
-		6B1FAD47264948B400603C6D /* BasketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD46264948B400603C6D /* BasketViewModel.swift */; };
 		6B1FAD492649515A00603C6D /* BasketItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD482649515900603C6D /* BasketItem.swift */; };
 		6B1FAD4D2649B51A00603C6D /* BasketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1FAD4C2649B51A00603C6D /* BasketView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B0455EA264B4ED30066640D /* OrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderView.swift; sourceTree = "<group>"; };
+		6B0455EC264DD1DB0066640D /* ApplePay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplePay.swift; sourceTree = "<group>"; };
+		6B0455EF264DDD0F0066640D /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		6B1FAD192648002800603C6D /* ShopApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShopApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B1FAD1C2648002800603C6D /* ShopAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopAppApp.swift; sourceTree = "<group>"; };
 		6B1FAD1E2648002800603C6D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,7 +40,6 @@
 		6B1FAD252648002A00603C6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B1FAD2B2648010F00603C6D /* MainscreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainscreenView.swift; sourceTree = "<group>"; };
 		6B1FAD2D2648023300603C6D /* TabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
-		6B1FAD35264807E600603C6D /* MainscreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainscreenViewModel.swift; sourceTree = "<group>"; };
 		6B1FAD372648081900603C6D /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		6B1FAD392648089800603C6D /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		6B1FAD3B26480AF800603C6D /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -44,7 +47,6 @@
 		6B1FAD4026486C3400603C6D /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		6B1FAD4226493DAA00603C6D /* Catalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catalog.swift; sourceTree = "<group>"; };
 		6B1FAD44264946D400603C6D /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
-		6B1FAD46264948B400603C6D /* BasketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewModel.swift; sourceTree = "<group>"; };
 		6B1FAD482649515900603C6D /* BasketItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketItem.swift; sourceTree = "<group>"; };
 		6B1FAD4C2649B51A00603C6D /* BasketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B0455EE264DDCDA0066640D /* Basket */ = {
+			isa = PBXGroup;
+			children = (
+				6B0455EA264B4ED30066640D /* OrderView.swift */,
+				6B0455EC264DD1DB0066640D /* ApplePay.swift */,
+			);
+			path = Basket;
+			sourceTree = "<group>";
+		};
 		6B1FAD102648002800603C6D = {
 			isa = PBXGroup;
 			children = (
@@ -83,7 +94,7 @@
 				6B1FAD1E2648002800603C6D /* ContentView.swift */,
 				6B1FAD332648078400603C6D /* Models */,
 				6B1FAD322648077B00603C6D /* Views */,
-				6B1FAD342648078C00603C6D /* ViewModels */,
+				6B1FAD342648078C00603C6D /* ViewModel */,
 				6B1FAD3B26480AF800603C6D /* Constants.swift */,
 				6B1FAD202648002A00603C6D /* Assets.xcassets */,
 				6B1FAD252648002A00603C6D /* Info.plist */,
@@ -107,7 +118,9 @@
 				6B1FAD2D2648023300603C6D /* TabBar.swift */,
 				6B1FAD2B2648010F00603C6D /* MainscreenView.swift */,
 				6B1FAD4C2649B51A00603C6D /* BasketView.swift */,
-				6B1FAD3D26480E3D00603C6D /* MainscreenViews */,
+				6B0455EF264DDD0F0066640D /* AccountView.swift */,
+				6B1FAD3D26480E3D00603C6D /* Mainscreen */,
+				6B0455EE264DDCDA0066640D /* Basket */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -121,17 +134,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		6B1FAD342648078C00603C6D /* ViewModels */ = {
+		6B1FAD342648078C00603C6D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				6B1FAD372648081900603C6D /* Store.swift */,
-				6B1FAD35264807E600603C6D /* MainscreenViewModel.swift */,
-				6B1FAD46264948B400603C6D /* BasketViewModel.swift */,
 			);
-			path = ViewModels;
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		6B1FAD3D26480E3D00603C6D /* MainscreenViews */ = {
+		6B1FAD3D26480E3D00603C6D /* Mainscreen */ = {
 			isa = PBXGroup;
 			children = (
 				6B1FAD392648089800603C6D /* SearchBar.swift */,
@@ -139,7 +150,7 @@
 				6B1FAD4226493DAA00603C6D /* Catalog.swift */,
 				6B1FAD44264946D400603C6D /* ItemDetailView.swift */,
 			);
-			path = MainscreenViews;
+			path = Mainscreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,9 +229,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B1FAD4D2649B51A00603C6D /* BasketView.swift in Sources */,
+				6B0455EB264B4ED30066640D /* OrderView.swift in Sources */,
 				6B1FAD492649515A00603C6D /* BasketItem.swift in Sources */,
 				6B1FAD45264946D400603C6D /* ItemDetailView.swift in Sources */,
-				6B1FAD47264948B400603C6D /* BasketViewModel.swift in Sources */,
+				6B0455F0264DDD0F0066640D /* AccountView.swift in Sources */,
+				6B0455ED264DD1DB0066640D /* ApplePay.swift in Sources */,
 				6B1FAD4126486C3400603C6D /* Item.swift in Sources */,
 				6B1FAD3A2648089800603C6D /* SearchBar.swift in Sources */,
 				6B1FAD1F2648002800603C6D /* ContentView.swift in Sources */,
@@ -229,7 +242,6 @@
 				6B1FAD3F26480E6300603C6D /* PopularItems.swift in Sources */,
 				6B1FAD1D2648002800603C6D /* ShopAppApp.swift in Sources */,
 				6B1FAD382648081900603C6D /* Store.swift in Sources */,
-				6B1FAD36264807E600603C6D /* MainscreenViewModel.swift in Sources */,
 				6B1FAD2E2648023300603C6D /* TabBar.swift in Sources */,
 				6B1FAD3C26480AF800603C6D /* Constants.swift in Sources */,
 			);

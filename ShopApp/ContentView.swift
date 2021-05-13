@@ -9,17 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var store = Store()
-    @StateObject var basket = BasketViewModel()
     
     var body: some View {
         NavigationView {
           TabBar()
             .environmentObject(store)
-            .environmentObject(basket)
             .navigationBarHidden(true)
             .navigationBarTitle("")
         }
-        .accentColor(.primary)
     }
 }
 

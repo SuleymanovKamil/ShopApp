@@ -9,7 +9,6 @@ import SwiftUI
 
 struct PopularItems: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var basket: BasketViewModel
     
     var body: some View {
         VStack (alignment: .leading, spacing: 0){
@@ -22,7 +21,7 @@ struct PopularItems: View {
                 HStack (spacing: 18) {
                     ForEach(store.popularsItems, id: \.self) { item in
                         NavigationLink(
-                            destination: ItemDetailView(item: item).environmentObject(basket),
+                            destination: ItemDetailView(item: item).environmentObject(store),
                             label: {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.white)
@@ -37,6 +36,7 @@ struct PopularItems: View {
                                         
                                         Text(item.name)
                                             .font(.system(.subheadline, design: .rounded))
+                                            .foregroundColor(.black)
                                             .lineLimit(1)
                                             .minimumScaleFactor(0.01)
                                             .padding(5)

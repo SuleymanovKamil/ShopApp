@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ItemDetailView: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var basket: BasketViewModel
     @State var itemCount = 1
     var item: Item
     
@@ -37,7 +36,7 @@ struct ItemDetailView: View {
                 Button(action: {if itemCount > 1 {itemCount -= 1}}, label: {
                     Image(systemName: "minus.circle.fill")
                         .font(.largeTitle)
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                 })
 
               
@@ -49,7 +48,7 @@ struct ItemDetailView: View {
                 Button(action: {itemCount += 1}, label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.largeTitle)
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                 })
               
             }
@@ -58,22 +57,22 @@ struct ItemDetailView: View {
 
             Button(action: {
               
-                if  !basket.basket.contains(where: { $0.item == item}) {
-                    basket.basket.append(BasketItem(item: item, quantity: itemCount))
+                if  !store.basket.contains(where: { $0.item == item}) {
+                    store.basket.append(BasketItem(item: item, quantity: itemCount))
                 } else {
-                    for index in 0..<basket.basket.count{
-                        for item in basket.basket {
-                            if item.item == basket.basket[index].item {
-                                basket.basket[index].quantity = itemCount
+                    for index in 0..<store.basket.count{
+                        for item in store.basket {
+                            if item.item == store.basket[index].item {
+                                store.basket[index].quantity = itemCount
                             }
                         }
                     }
                 }
                 
                 }, label: {
-                    Text(basket.basket.contains(where: { $0.item == item}) ? ( basket.basket.contains(where: { $0.quantity == itemCount}) ? "Добавлено"  : "Изменить количество"): "Добавить")
+                    Text(store.basket.contains(where: { $0.item == item}) ? ( store.basket.contains(where: { $0.quantity == itemCount}) ? "Добавлено"  : "Изменить количество"): "Добавить")
                     .font(.title2)
-                    .foregroundColor(.white)
+                        .foregroundColor(Color("darkMode"))
                         .fixedSize()
                 .padding(.vertical, 10)
                         .frame(width: 300)
