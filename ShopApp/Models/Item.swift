@@ -10,9 +10,11 @@ import Foundation
 struct Item: Hashable{
     let name: String
     let price: Double
+    let category: Category
     let quantity: Int?
     let description: String?
     let image: String?
+    let isPopular = false
 }
 
 

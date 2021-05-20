@@ -17,6 +17,8 @@ struct PopularItems: View {
                 .bold()
                 .padding([.leading, .top])
             
+            
+            
             ScrollView (.horizontal, showsIndicators: false) {
                 HStack (spacing: 18) {
                     ForEach(store.popularsItems, id: \.self) { item in
@@ -30,7 +32,7 @@ struct PopularItems: View {
                                 .shadow(radius: 5)
                                 .overlay(
                                     ZStack (alignment: Alignment(horizontal: .center, vertical: .bottom)){
-                                        Image(item.image!)
+                                        Image(uiImage: Utility.shared.base64ToImage(item.image!) ?? #imageLiteral(resourceName: "placeholder"))
                                             .resizable()
                                             .cornerRadius(10)
                                         

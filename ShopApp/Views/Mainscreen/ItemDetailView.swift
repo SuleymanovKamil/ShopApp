@@ -10,12 +10,13 @@ import SwiftUI
 struct ItemDetailView: View {
     @EnvironmentObject var store: Store
     @State var itemCount = 1
+    
     var item: Item
     
     var body: some View {
         VStack (spacing: 20){
             
-            Image(item.image!)
+            Image(uiImage: Utility.shared.base64ToImage(item.image!) ?? #imageLiteral(resourceName: "placeholder"))
                 .resizable()
                 .scaledToFill()
                 .frame(width: screenWidth)
@@ -28,7 +29,7 @@ struct ItemDetailView: View {
                 .font(.system(.title, design: .rounded))
                 .bold()
                 
-            Text("Цена: \(item.price)₽")
+            Text("Цена: \(String(format: "%.0f", item.price))₽")
                 .font(.system(.title2, design: .rounded))
                
             
@@ -70,7 +71,7 @@ struct ItemDetailView: View {
                 }
                 
                 }, label: {
-                    Text(store.basket.contains(where: { $0.item == item}) ? ( store.basket.contains(where: { $0.quantity == itemCount}) ? "Добавлено"  : "Изменить количество"): "Добавить")
+                    Text(store.basket.contains(where: { $0.item == item}) ? (store.basket.contains(where: { $0.quantity == itemCount}) ? "Добавлено"  : "Изменить количество"): "Добавить")
                     .font(.title2)
                         .foregroundColor(Color("darkMode"))
                         .fixedSize()
@@ -83,11 +84,17 @@ struct ItemDetailView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)).opacity(0.05).ignoresSafeArea())
+        .navigationBarItems(trailing:Button(action: {
+            
+        }, label: {
+          Image(systemName: "plus")
+        }))
     }
 }
 
 struct ItemDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ItemDetailView(item:   Item(name: "Американо", price: 110, quantity: nil, description: nil, image: "coffee1"))
+        ItemDetailView(item:   Item(name: "Американо", price: 110, category: Category(name: "coffee"), quantity: nil, description: nil, image: "coffee1"))
+            .environmentObject(Store())
     }
 }

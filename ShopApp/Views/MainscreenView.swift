@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainscreenView: View {
     @EnvironmentObject var store: Store
-    
+    @State private var addCategory = false
     var body: some View {
         VStack (alignment: .leading){
             
@@ -27,6 +27,16 @@ struct MainscreenView: View {
         .onTapGesture {
             hideKeyboard()
         }
+        .onAppear{
+//            store.saveItemsToFirebase()
+            store.fetchAdmins()
+            if store.currentItems.isEmpty{
+                store.fetchCategories()
+                store.fetchPopularItems()
+            store.fetchItems()
+            }
+        }
+       
       
     }
 }

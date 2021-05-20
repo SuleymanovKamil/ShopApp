@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import Firebase
 
+let currentUser = Auth.auth().currentUser?.phoneNumber
 let imagePlaceholder = "https://poanonic.ru/public/images/placeholder.png"
 let screenHeight = UIScreen.main.bounds.height
 let screenWidth = UIScreen.main.bounds.width
@@ -44,6 +46,23 @@ struct ShadowModifier: ViewModifier {
 extension View {
     func doubleShadows() -> some View {
         self.modifier(ShadowModifier())
+    }
+}
+
+//Button style
+struct DarkModeButton: ViewModifier{
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(Color("darkMode"))
+            .padding(10)
+            .padding(.horizontal, 30)
+            .background(Color.primary.cornerRadius(5))
+    }
+}
+
+extension View{
+    func darkModeButton() -> some View{
+        self.modifier(DarkModeButton())
     }
 }
 
@@ -141,3 +160,29 @@ extension View {
 }
 
 
+//Remove duplicates in arrays
+extension Array where Element:Equatable {
+    func removeDuplicates() -> [Element] {
+        var result = [Element]()
+
+        for value in self {
+            if result.contains(value) == false {
+                result.append(value)
+            }
+        }
+
+        return result
+    }
+}
+
+
+//Remove element from array be name
+extension Array where Element: Equatable {
+
+   // Remove first collection element that is equal to the given `object`:
+   mutating func remove(object: Element) {
+       guard let index = firstIndex(of: object) else {return}
+       remove(at: index)
+   }
+
+}
