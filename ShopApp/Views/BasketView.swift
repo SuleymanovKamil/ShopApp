@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct BasketView: View {
     @EnvironmentObject var store: Store
@@ -28,29 +29,34 @@ struct BasketView: View {
             PullToRefresh(content: {
                 List{
                     ForEach(store.basket, id: \.self) { item in
-                        HStack {
-                            
-                            Image(uiImage: Utility.shared.base64ToImage(item.item.image!) ?? #imageLiteral(resourceName: "placeholder"))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 70)
-                                .cornerRadius(6)
-                            
-                            Spacer()
-                            
-                            VStack (alignment: .trailing, spacing: 0){
+                        NavigationLink(
+                            destination: ItemDetailView(item: item.item).environmentObject(store),
+                            label: {
+                            HStack {
                                 
-                                Text(item.item.name)
-                                Text("Количество: \(item.quantity)шт.")
-                                Text("Цена: \( String(format: "%.0f", item.item.price * Double(item.quantity)))₽")
-                                
+                                Image(uiImage: Utility.shared.base64ToImage(item.item.image!) ?? #imageLiteral(resourceName: "placeholder"))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 70)
+                                    .cornerRadius(6)
                                 
                                 Spacer()
+                                
+                                VStack (alignment: .trailing, spacing: 0){
+                                    
+                                    Text(item.item.name)
+                                    Text("Количество: \(item.quantity)шт.")
+                                    Text("Цена: \( String(format: "%.0f", item.item.price * Double(item.quantity)))₽")
+                                    
+                                    
+                                    Spacer()
+                                }
+                                
                             }
-                            
+                        })
                         }
-                    }
                     .onDelete(perform: delete)
+                    
                 }
             },  onRefresh: {control in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -61,13 +67,15 @@ struct BasketView: View {
             
             HStack {
                 
-                
                 Button(action: {
                     paymentHandler.ammount = Double(store.totalSum)
                     paymentHandler.startPayment { (success) in
                         if success {
                             print("Success")
+                            store.saveOrderToFirebase()
                             store.basket.removeAll()
+                            deleteBsketFromFireBase()
+                            
                         } else {
                             print("Failed")
                         }
@@ -78,8 +86,8 @@ struct BasketView: View {
                         .padding(10)
                         .padding(.horizontal)
                         .background(Color.primary.cornerRadius(5))
+                        .fixedSize()
                 })
-                
                 
                 Spacer()
                 Text("Итого: \(String(format: "%.0f", store.totalSum))₽")
@@ -94,7 +102,19 @@ struct BasketView: View {
     }
     func delete(at offsets: IndexSet) {
         store.basket.remove(atOffsets: offsets)
+        store.saveBasketToFirebase()
     }
+    
+    func deleteBsketFromFireBase(){
+        let db = Firestore.firestore()
+        db.collection("Basket").document(currentUser ?? currentDevice).delete(){ err in
+            if let err = err {
+                print("Error removing basket: \(err)")
+            }
+        }
+    }
+    
+   
 }
 
 struct BasketView_Previews: PreviewProvider {
@@ -105,65 +125,4 @@ struct BasketView_Previews: PreviewProvider {
 }
 
 
-struct PullToRefresh<Content: View>: UIViewRepresentable {
-    
-    var content: Content
-    var onRefresh: (UIRefreshControl) -> ()
-    var refreshControl = UIRefreshControl()
-    
-    init(@ViewBuilder content: @escaping () -> Content, onRefresh: @escaping (UIRefreshControl) -> ()){
-        self.content = content()
-        self.onRefresh = onRefresh
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
-    }
-    
-    func makeUIView(context: Context) -> UIScrollView {
-        
-        let scrollView = UIScrollView()
-        refreshControl.attributedTitle = NSAttributedString(string: "Обновление")
-        refreshControl.tintColor = .black
-        refreshControl.addTarget(context.coordinator, action: #selector(context.coordinator.onRefresh), for: .valueChanged)
-        
-      
-        setupView(scrollView: scrollView)
-        scrollView.refreshControl = refreshControl
-        
-        return scrollView
-    }
-    
-    func updateUIView(_ uiView: UIScrollView, context: Context) {
-        setupView(scrollView: uiView)
-    }
-    
-    func setupView(scrollView: UIScrollView) {
-        let hostView = UIHostingController(rootView: content.frame(maxHeight: .infinity, alignment: .top))
-        hostView.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = [
-            hostView.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            hostView.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            hostView.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            hostView.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            
-            hostView.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            hostView.view.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor, constant: 1)
-        ]
-        scrollView.subviews.last?.removeFromSuperview()
-        scrollView.addSubview(hostView.view)
-        scrollView.addConstraints(constraints)
-    }
-    
-    class Coordinator: NSObject{
-        var parent: PullToRefresh
-        
-        init(parent: PullToRefresh){
-            self.parent = parent
-        }
-        @objc func onRefresh(){
-            parent.onRefresh(parent.refreshControl)
-        }
-    }
-}
+

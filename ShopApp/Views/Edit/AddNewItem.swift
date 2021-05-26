@@ -16,113 +16,119 @@ struct AddNewItem: View {
     @State private var itemDescription = ""
     @State private var itemImage: UIImage?
     @State private var imagePicker = false
+    @State private var imagePickerCamera = false
     @State private var photoLibrary: UIImagePickerController.SourceType = .photoLibrary
     @State private var camera: UIImagePickerController.SourceType = .camera
     @State private var isPopular = false
-    
-    
+   
     @State private var convertedImage = ""
     
     var body: some View {
-        VStack {
-            ScrollView {
+        
+        ScrollView {
+            VStack {
+                
                 VStack {
-                    Group{
-                    Text("Добавить новый товар")
-                        .font(.title3)
-                        .bold()
-                        .padding(.top, 30)
-          
-                        TextField("Название", text: $itemName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.top)
                     
-                    TextField("Цена", text: $itemPrice)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    CustomTextField(title: "Название", text: $itemName)
+                    
+                    CustomTextField(title: "Цена", text: $itemPrice)
                         .keyboardType(.numbersAndPunctuation)
                     
-                    TextField("Категория товара", text: $itemCategory)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    CustomTextField(title: "Категория товара", text: $itemCategory)
+                
+                    CustomTextField(title: "Количество на складе (не обязательно)", text: $itemQuantity)
+                 
+                    CustomTextField(title: "Описание (не обязательно)", text: $itemDescription)
+                  
+                    Toggle("Добавить в популярное?", isOn: $isPopular)
+                        .padding()
+                        .padding(.bottom, 40)
                     
-                    TextField("Количество на складе (не обязательно)", text: $itemQuantity)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    TextField("Описание (не обязательно)", text: $itemDescription)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                        
-                        
                     Text("Добавить фото")
                         .font(.headline)
-                        
-                        Toggle("Добавить в популярное?", isOn: $isPopular)
-                            .padding(.bottom, 40)
-                    }
-                    .padding(.horizontal)
-
+                        .padding(.bottom, 20)
                     
-                    if itemImage != nil{
-                        Image(uiImage: itemImage!)
-                            .resizable()
-                            .scaledToFit()
-                    }
-                    
-                    HStack{
-                        Button(action: {imagePicker.toggle()}, label: {
-                            Text("Галерея")
-                                .darkModeButton()
-                        })
-                        .fullScreenCover(isPresented: $imagePicker, content: {
-                            ImagePickerView(selectedImage: $itemImage, sourceType: $photoLibrary)
-                        })
-                        
-                        Button(action: {}, label: {
-                            Text("Камера")
-                                .darkModeButton()
-                        })
-                        .fullScreenCover(isPresented: $imagePicker, content: {
-                            ImagePickerView(selectedImage: $itemImage, sourceType: $camera)
-                        })
-
-                    }
-                   
                 }
+                .padding(.horizontal)
+                
+                
+                if itemImage != nil{
+                    Image(uiImage: itemImage!)
+                        .resizable()
+                        .scaledToFit()
+                }
+                
+                HStack{
+                    Button(action: {
+                        imagePicker.toggle()
+                        hideKeyboard()
+                    }, label: {
+                        Text("Галерея")
+                            .darkModeButton()
+                    })
+                    .fullScreenCover(isPresented: $imagePicker, content: {
+                        ImagePickerView(selectedImage: $itemImage, sourceType: $photoLibrary)
+                    })
+                    .padding(.trailing, 20)
+                  
+                    
+                    Button(action: {
+                        imagePickerCamera.toggle()
+                        hideKeyboard()
+                    }, label: {
+                        Text("Камера")
+                            .darkModeButton()
+                    })
+                    .fullScreenCover(isPresented: $imagePickerCamera, content: {
+                        ImagePickerView(selectedImage: $itemImage, sourceType: $camera)
+                    })
+                    
+                }
+                .padding(.bottom, 40)
                 .onChange(of: itemImage, perform: { value in
                     if itemImage != nil  {
                         convertedImage =  Utility.shared.convertImageToBase64String(image: itemImage!)
                     }
                 })
-            }
-            
-            Button(action: {
-                    saveCategoryToFirebase()
-                itemName = ""
-                hideKeyboard()
                 
-            }, label: {
-                Text("Сохранить")
-                    .darkModeButton()
-            })
+                Spacer()
+                Button(action: {
+                    saveCategoryToFirebase()
+                    itemName = ""
+                    hideKeyboard()
+                    
+                }, label: {
+                    Text("Сохранить")
+                        .darkModeButton()
+                })
+                .disabled(itemName == "" && itemPrice == "" && itemCategory == "" && convertedImage == "")
+            }
+            .padding(.top, 30)
+            .navigationTitle("Добавить новый товар")
+            .navigationBarTitleDisplayMode(.inline)
         }
+        
+        
     }
     
     func saveCategoryToFirebase (){
-            let db = Firestore.firestore()
-                db.collection("Items").document(itemName).setData([
-                    "name" : itemName,
-                    "category" : itemCategory,
-                    "price" : Double(itemPrice)!,
-                    "quantity" : itemQuantity,
-                    "description" : itemDescription,
-                    "image" : convertedImage,
-                    "isPopular" : isPopular
-                    
-                ]) { (err) in
-                    if err != nil{
-                        print(err!.localizedDescription)
-                    }
-                }
+        let db = Firestore.firestore()
+        db.collection("Items").document(itemName).setData([
+            "name" : itemName,
+            "category" : itemCategory,
+            "price" : Double(itemPrice)!,
+            "quantity" : itemQuantity,
+            "description" : itemDescription,
+            "image" : convertedImage,
+            "isPopular" : isPopular
+            
+        ]) { (err) in
+            if err != nil{
+                print(err!.localizedDescription)
+            }
         }
+    }
 }
 
 struct AddNewItem_Previews: PreviewProvider {

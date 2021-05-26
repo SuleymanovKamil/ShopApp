@@ -14,7 +14,8 @@ struct Item: Hashable{
     let quantity: Int?
     let description: String?
     let image: String?
-    let isPopular = false
+    let isPopular: Bool
+    
 }
 
 

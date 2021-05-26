@@ -51,11 +51,6 @@ class AccountCreationViewModel: NSObject,ObservableObject,CLLocationManagerDeleg
     
     
     func login(){
-        
-        
-        // Getting OTP...
-        // Disabling App Verification...
-        // Undo it while testing with live Phone....
         Auth.auth().settings?.isAppVerificationDisabledForTesting = true
         
         isLoading.toggle()

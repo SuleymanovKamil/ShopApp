@@ -24,7 +24,7 @@ struct OrderView: View {
             
             Divider()
             
-            CustomTextField(title: "Адрес", text: $address, textfieldTag: $tags, textfieldID: 1)
+            CustomTextField(title: "Адрес", text: $address)
             
             VStack (alignment: .leading){
                 Text("Примечение к заказу:")
@@ -69,61 +69,5 @@ struct OrderView_Previews: PreviewProvider {
 }
 
 
-import Introspect
 
-struct CustomTextField: View {
-    var title: String
-    @Binding var text: String
-    @Binding var textfieldTag: Int
-    var textfieldID: Int
-    
-  
-    
-    var body: some View {
-        ZStack (alignment: Alignment(horizontal: .leading, vertical: .center)){
-            Text(title)
-                .font(Font.system(size: text.isEmpty  && textfieldID != textfieldTag ? 16 : 12))
-                .offset(y: text.isEmpty && textfieldTag != textfieldID ? 0 : -25)
-                .zIndex(1)
-            
-            
-            VStack {
-                ZStack (alignment: Alignment(horizontal: .trailing, vertical: .center)){
-                    TextField("", text: $text, onEditingChanged: { editing in
-                        if !editing && textfieldTag != 0 && textfieldTag == textfieldID{
-                            textfieldTag = textfieldID + 1
-                        }
-                    })
-                    .accentColor(.black)
-                    .foregroundColor(.primary)
-                    
-                   
-                }
-                
-                Capsule()
-                    .frame(height: 1)
-                    .foregroundColor(textfieldTag == textfieldID ? .primary : .gray)
-            }
-          
-        }
-        .padding()
-        .padding(.top, 5)
-        .onTapGesture {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                textfieldTag = textfieldID
-            }
-        }
-        .introspectTextField { textfield in
-            textfield.returnKeyType = .next
-            textfield.enablesReturnKeyAutomatically = true
-            textfield.tag = textfieldID
-            if textfield.tag == textfieldTag {
-                textfield.becomeFirstResponder()
-                
-            } else {
-                textfield.resignFirstResponder()
-            }
-        }
-        
-    }
-}
+

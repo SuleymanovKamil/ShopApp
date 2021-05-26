@@ -12,13 +12,11 @@ struct PopularItems: View {
     
     var body: some View {
         VStack (alignment: .leading, spacing: 0){
-            Text("Популярное")
+            Text(store.topTitle)
                 .font(.system(.title, design: .rounded))
                 .bold()
                 .padding([.leading, .top])
-            
-            
-            
+           
             ScrollView (.horizontal, showsIndicators: false) {
                 HStack (spacing: 18) {
                     ForEach(store.popularsItems, id: \.self) { item in
@@ -52,7 +50,6 @@ struct PopularItems: View {
                             .simultaneousGesture(TapGesture().onEnded{
                                 store.selectedItem = item
                                             })
-
                     }
                 }
                 .padding()

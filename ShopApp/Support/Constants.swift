@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 
 let currentUser = Auth.auth().currentUser?.phoneNumber
+let currentDevice = UIDevice.current.identifierForVendor!.uuidString
 let imagePlaceholder = "https://poanonic.ru/public/images/placeholder.png"
 let screenHeight = UIScreen.main.bounds.height
 let screenWidth = UIScreen.main.bounds.width

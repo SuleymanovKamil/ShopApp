@@ -10,56 +10,60 @@ import Firebase
 
 struct Catalog: View {
     @EnvironmentObject var store: Store
-    @State private var addCategory = false
-    @State private var addItem = false
     @State private var edit = false
+    @AppStorage("log_Status") var status = false
     
     var body: some View {
         VStack (alignment: .leading, spacing: 0){
             HStack {
-                Text("Меню")
+                Text(store.title)
                     .font(.system(.title, design: .rounded))
                     .bold()
-                    .padding([.leading, .top])
                 
+                if store.isCurrentUserAdmin && status{
+                    NavigationLink(
+                        destination:   EditTitles().environmentObject(store),
+                        label: {
+                            Image(systemName: "square.and.pencil")
+                                .font(.title3)
+                                .foregroundColor(.primary)
+                        })
+                }
                 Spacer()
                 
-                if store.isCurrentUserAdmin {
+                if store.isCurrentUserAdmin && status{
                     HStack{
-                    Button(action: {addCategory = true}, label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.primary)
-                            
-                    })
-                    .sheet(isPresented: $addCategory, content: {
-                        AddNewCategory()
-                    })
-                    
-                    Button(action: {addItem = true}, label: {
-                        Image(systemName: "externaldrive.fill.badge.plus")
-                            .font(.title)
-                            .foregroundColor(.primary)
-                            
-                    })
-                    .sheet(isPresented: $addItem, content: {
-                        AddNewItem()
-                    })
+                        NavigationLink(
+                            destination:   AddNewCategory(),
+                            label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                            })
+                        
+                        
+                        NavigationLink(
+                            destination:   AddNewItem(),
+                            label: {
+                                Image(systemName: "externaldrive.fill.badge.plus")
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                            })
+                        
                         
                         Button(action: {edit.toggle()}, label: {
                             Image(systemName: "pencil.circle.fill")
                                 .font(.title)
                                 .foregroundColor(.primary)
-                                
                         })
                     }
-                    .padding([.trailing, .top])
                 }
             }
+            .padding()
             
             ScrollView (.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(store.categories.removeDuplicates(), id: \.self) { category in
+                    ForEach(store.categories.reversed(), id: \.self) { category in
                         ZStack (alignment: Alignment(horizontal: .trailing, vertical: .center)){
                             Image(systemName: "trash.circle.fill")
                                 .renderingMode(.original)
@@ -68,7 +72,9 @@ struct Catalog: View {
                                 .offset(x: 10, y: -10)
                                 .opacity(edit ? 1 : 0)
                                 .onTapGesture {
-                                        deleteFromFireBase(name: category.name)
+                                    deleteFromFireBase(collection: "Categories", document: category.name, comletion: {
+                                        store.categories.remove(object: Category(name: category.name))
+                                    })
                                 }
                             
                             Text(category.name)
@@ -82,7 +88,7 @@ struct Catalog: View {
                                 .onTapGesture {
                                     store.currentCategory = category.name
                                     store.fetchItems()
-                            }
+                                }
                         }
                     }
                 }
@@ -103,34 +109,45 @@ struct Catalog: View {
                                     .frame(height: 250)
                                     .shadow(radius: 5)
                                     .overlay(
-                                        VStack{
-                                            Image(uiImage: Utility.shared.base64ToImage(item.image!) ?? #imageLiteral(resourceName: "placeholder"))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipShape(CustomCorner(corners: [.topLeft, .topRight]))
-                                            
-                                            Spacer()
-                                            
-                                            VStack (spacing: 4){
-                                                Text(item.name)
-                                                    .font(.system(.headline, design: .rounded))
-                                                    .foregroundColor(.black)
-                                                    .lineLimit(1)
+                                        ZStack (alignment: Alignment(horizontal: .trailing, vertical: .top)){
+                                            Image(systemName: "trash.circle.fill")
+                                                .renderingMode(.original)
+                                                .font(.title)
+                                                .zIndex(1)
+                                                .offset(x: 10, y: -10)
+                                                .opacity(edit ? 1 : 0)
+                                                .onTapGesture {
+                                                    deleteFromFireBase(collection: "Items", document: item.name, comletion: {
+                                                        store.currentItems.remove(object: Item(name: item.name, price: item.price, category: item.category, quantity: item.quantity, description: item.description, image: item.image, isPopular: item.isPopular))
+                                                    })
+                                                }
+                                            VStack{
+                                                Image(uiImage: Utility.shared.base64ToImage(item.image!) ?? #imageLiteral(resourceName: "placeholder"))
+                                                    .resizable()
+                                                    .clipShape(CustomCorner(corners: [.topLeft, .topRight]))
                                                 
-                                                HStack {
-                                                    Image(systemName: "minus.circle.fill")
-                                                        .font(.title3)
-                                                        .foregroundColor(.red)
-                                                        .opacity(0)
-                                                    
-                                                    Text("\(String(format: "%.0f", item.price))₽")
+                                                Spacer()
+                                                
+                                                VStack (spacing: 4){
+                                                    Text(item.name)
+                                                        .font(.system(.headline, design: .rounded))
                                                         .foregroundColor(.black)
+                                                        .lineLimit(1)
+                                                    
+                                                    HStack {
+                                                        Image(systemName: "minus.circle.fill")
+                                                            .font(.title3)
+                                                            .foregroundColor(.red)
+                                                            .opacity(0)
                                                         
-                                                    
-                                                    Image(systemName: "plus.circle.fill")
-                                                        .font(.title3)
-                                                        .foregroundColor(.black)
-                                                        .opacity(0)
+                                                        Text("\(String(format: "%.0f", item.price))₽")
+                                                            .foregroundColor(.black)
+                                                        
+                                                        Image(systemName: "plus.circle.fill")
+                                                            .font(.title3)
+                                                            .foregroundColor(.black)
+                                                            .opacity(0)
+                                                    }
                                                 }
                                             }
                                         }
@@ -143,20 +160,20 @@ struct Catalog: View {
             }
         }
         .padding(.bottom, 80)
-       
+        
     }
     
-    func deleteFromFireBase (name: String){
-    
-            let db = Firestore.firestore()
-        db.collection("Categories").document(name).delete(){ err in
+    func deleteFromFireBase (collection: String, document name: String, comletion: @escaping () -> Void){
+        
+        let db = Firestore.firestore()
+        db.collection(collection).document(name).delete(){ err in
             if let err = err {
                 print("Error removing document: \(err)")
             } else {
                 store.categories.remove(object: Category(name: name))
             }
         }
-        }
+    }
 }
 
 

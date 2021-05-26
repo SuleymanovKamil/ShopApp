@@ -12,17 +12,9 @@ struct AddNewCategory: View {
     @State private var categoryName = ""
     
     var body: some View {
-        VStack {
+        VStack (spacing: 20){
            
-            Text("Добавить новую категорию товаров")
-                .font(.title3)
-                .bold()
-                .padding(.top, 30)
-            
-            
-                TextField("Название", text: $categoryName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+            CustomTextField(title: "Добавить новую категорию товаров", text: $categoryName)
             
             Button(action: {
                     saveCategoryToFirebase(categoryName)
@@ -36,9 +28,13 @@ struct AddNewCategory: View {
                     .padding(.horizontal, 30)
                     .background(Color.primary.cornerRadius(5))
             })
+            .disabled(categoryName == "")
 
             Spacer()
         }
+        .padding(.top, 30)
+        .navigationTitle("Редактор категорий")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     func saveCategoryToFirebase (_ name: String){
