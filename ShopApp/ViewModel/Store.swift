@@ -25,10 +25,11 @@ class Store: ObservableObject {
     @Published var currentItems: [Item] = []
     @Published var searchItems: [String] = []
     @Published var orders: [Order] = []
+    @Published var allOrders: [Order] = []
     @Published var currentCategory =  String()
     @Published var isCurrentUserAdmin = false
     
-    @Published var showItemDetail = false
+    @Published var deliveryAddress = String()
     //basket
     @Published var basket: [BasketItem] = []
   
@@ -84,8 +85,7 @@ class Store: ObservableObject {
     
     
     func fetchAdmins(){
-        db.collection("Admin").addSnapshotListener { (snap, err) in
-          DispatchQueue.main.async {
+        db.collection("Admin").addSnapshotListener { [self] (snap, err) in
             if err != nil {
                 print((err?.localizedDescription)!)
                 return
@@ -94,12 +94,19 @@ class Store: ObservableObject {
                     let id = i.document.documentID
                  
                     if currentUser == id {
-                        self.isCurrentUserAdmin = true
+                       isCurrentUserAdmin = true
                         print("you log in as admin")
-                    } 
+                        
+                    } else {
+                      
+                    }
+                }
+                if isCurrentUserAdmin {
+                   fetchAdminOrderHistory()
+                } else {
+                    fetchUserOrderHistory()
                 }
             }
-          }
         }
     }
     
@@ -289,7 +296,8 @@ class Store: ObservableObject {
             "OrderNumber" : 1,
             "Date" : "\(dateFormatter.string(from: date))",
             "Items": items,
-            "TotalSum" : " \(String(format: "%.0f", totalSum))₽"
+            "TotalSum" : " \(String(format: "%.0f", totalSum))₽",
+            "DeliveryAddress" : userProfile.location ?? ""
         ]) { (err) in
             if err != nil{
                 print(err!.localizedDescription)
@@ -314,7 +322,7 @@ class Store: ObservableObject {
     }
    
     func fetchUserOrderHistory(){
-     
+        var orderItems : [[String: Int]] = []
         db.collection("Orders").whereField("Owner", isEqualTo: currentUser ?? currentDevice).addSnapshotListener { [unowned self] (snap, error) in
      
             guard let itemData = snap else{return}
@@ -327,20 +335,54 @@ class Store: ObservableObject {
            
                     let orderNumber = i.get("OrderNumber") as! Int
                     let totalSum = i.get("TotalSum") as! String
+                    let deliveryAddress = i.get("DeliveryAddress") as! String
                     let items = i.get("Items") as! [[String: Any]]
                     for i in 0..<items.count{
                     let itemName = items[i]["name"] as! String
-                    let quantity = items[i]["quantity"] as! Int
-                        if  !orders.contains(Order(date: "\(date))", item: [itemName : quantity], orderNumber: orderNumber, totalSum: totalSum)) {
-                        orders.append(Order(date: "\(date))", item: [itemName : quantity], orderNumber: orderNumber, totalSum: totalSum))
+                        let quantity = items[i]["quantity"] as! Int
+                            orderItems.append([itemName : quantity])
+                           
                         }
-                    }
+                        if  !orders.contains(Order(date: "\(date))", item: orderItems, orderNumber: orderNumber, totalSum: totalSum, deliveryAddress: deliveryAddress)) {
+                            orders.append(Order(date: "\(date))", item: orderItems, orderNumber: orderNumber, totalSum: totalSum, deliveryAddress: deliveryAddress))
+                        }
                 }
                 print("Fetch order history")
             }
         }
     }
    
+    func fetchAdminOrderHistory(){
+     
+        db.collection("Orders").addSnapshotListener { [unowned self] (snap, error) in
+            var orderItems : [[String: Int]] = []
+            guard let itemData = snap else{return}
+            if error != nil {
+                print(error!)
+            }
+            else {
+                for i in itemData.documents{
+                    let date = i.get("Date") as! String
+           
+                    let orderNumber = i.get("OrderNumber") as! Int
+                    let totalSum = i.get("TotalSum") as! String
+                    let deliveryAddress = i.get("DeliveryAddress") as! String
+                    let items = i.get("Items") as! [[String: Any]]
+                    for i in 0..<items.count{
+                    let itemName = items[i]["name"] as! String
+                    let quantity = items[i]["quantity"] as! Int
+                        orderItems.append([itemName : quantity])
+                       
+                    }
+                    if  !allOrders.contains(Order(date: "\(date))", item: orderItems, orderNumber: orderNumber, totalSum: totalSum, deliveryAddress: deliveryAddress)) {
+                        allOrders.append(Order(date: "\(date))", item: orderItems, orderNumber: orderNumber, totalSum: totalSum, deliveryAddress: deliveryAddress))
+                    }
+                }
+                print("Fetch all order history \(allOrders.count)")
+            }
+        }
+    }
+    
 }
 
 

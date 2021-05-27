@@ -9,7 +9,8 @@ import Foundation
 
 struct Order: Hashable {
     let date: String
-    let item: [String : Int]
+    let item: [[String : Int]]
     let orderNumber: Int
     let totalSum: String
+    let deliveryAddress: String
 }

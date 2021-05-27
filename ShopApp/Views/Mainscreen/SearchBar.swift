@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
-import Introspect
+import Firebase
 
 struct Searchbar: View {
     @EnvironmentObject var store: Store
     @Binding var onTap: Bool
+    @State var item: Item!
+    @State var showDetail = false
     var body: some View {
         GeometryReader { _ in
             VStack {
@@ -57,9 +59,18 @@ struct Searchbar: View {
                     List(store.searchItems.filter{$0.contains(store.search)}, id: \.self) { item in
                         
                         Text(item)
+                            .onTapGesture {
+                                fetchItem(name: item) {
+                                    self.item = $0
+                                    showDetail = true
+                                }
+                            }
+                    
                     }
                 }
-                
+                if item != nil {
+                NavigationLink("", destination: ItemDetailView(item: self.item), isActive: $showDetail)
+                }
                 Spacer()
             }
             .frame(height: onTap ? CGFloat( screenHeight - 130) : 65)
@@ -70,6 +81,30 @@ struct Searchbar: View {
     func searchingInItems(){
         withAnimation(.linear){
             store.searchItems =  store.searchItems.filter{$0.lowercased().contains(store.search.lowercased())
+            }
+        }
+    }
+    
+    func fetchItem(name: String, completion: @escaping (_ item: Item?)-> Void) {
+        let db = Firestore.firestore()
+        db.collection("Items").whereField("name", isEqualTo: name).getDocuments { (snap, error) in
+            if error != nil {
+                print(error!)
+            }
+            else {
+                for i in snap!.documentChanges {
+                  let dict =  i.document.data() as NSDictionary
+               
+                    let name = dict.value(forKey: "name") as! String
+                    let price =  dict.value(forKey: "price") as! Double
+                    let category = dict.value(forKey: "category") as! String
+                    let quantity =  dict.value(forKey: "quantity") as? Int
+                    let description =  dict.value(forKey: "description") as? String
+                    let image = dict.value(forKey: "image") as? String
+                    let isPopular = dict.value(forKey: "isPopular") as! Bool
+                    
+                    completion(Item(name: name, price: price, category: Category(name: category), quantity: quantity, description: description, image: image, isPopular: isPopular))
+                }
             }
         }
     }

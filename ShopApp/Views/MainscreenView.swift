@@ -30,19 +30,7 @@ struct MainscreenView: View {
             .onTapGesture {
                 hideKeyboard()
             }
-            .onAppear{
-    //            store.saveItemsToFirebase()
-                store.fetchAdmins()
-                if store.currentItems.isEmpty{
-                    store.fetchCategories()
-                    store.fetchPopularItems()
-                    store.fetchTitles()
-                }
-                if store.basket.isEmpty {
-                    store.fetchBasketFromFirebase()
-                    print("load basket")
-                }
-        }
+  
         }
        
       

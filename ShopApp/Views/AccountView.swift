@@ -40,12 +40,20 @@ struct AccountView: View {
                     })
                 
                 if store.userProfile.id == currentUser {
-                Text("Имя: " + (store.userProfile.userName))
+                    VStack (alignment: .leading) {
+                        if !store.isCurrentUserAdmin{
+                        Text("Имя: " + (store.userProfile.userName))
+                        Text("Адрес доставки: " + (store.userProfile.location ?? ""))
+                        }
+                            Text("История заказов")
+                                .font(.headline)
+                                .bold()
+                                .padding(.top)
+                    }
                     .padding(.leading)
-                Text("Адрес доставки: " + (store.userProfile.location ?? ""))
-                    .padding(.leading)
-                    
-                    List(store.orders, id: \.self) { order in
+             
+                  
+                    List( store.isCurrentUserAdmin ? store.allOrders : store.orders, id: \.self) { order in
                         NavigationLink(
                             destination: orderDetail(order: order).environmentObject(store),
                             label: {
@@ -55,20 +63,15 @@ struct AccountView: View {
                                 Text("Сумма заказа: \(order.totalSum)" )
                             }
                         })
-                            .buttonStyle(PlainButtonStyle())
+                        .buttonStyle(PlainButtonStyle())
                     }
-                 
+                   
                 }
+                
                 Spacer()
-                
-             
-                
             }
+            
            
-            .onAppear{
-                store.fetchCurrenUser()
-                store.fetchUserOrderHistory()
-            }
         } else {
             LoginView()
                 .environmentObject(accountCreation)
@@ -119,20 +122,24 @@ struct orderDetail: View {
             Text("Номер заказа: \(order.orderNumber)")
             Text("Дата заказа: (" + order.date)
             Text("Сумма заказа: \(order.totalSum)" )
+            Text("Адрес лоставки: \(order.deliveryAddress)" )
             
             Text("Товары в заказе:" )
                 .padding(.top)
-                ForEach(order.item.sorted(by: >), id: \.key) {  key, value in
+            ForEach(0..<order.item.count, id: \.self) {  index in
+                ForEach(0..<order.item[index].count, id: \.self) { item in
+                    
+                }
                     HStack {
-                        Text(key)
-                        Text("\(value)шт.")
+//                        Text("\()")
+//                        Text("\(value)шт.")
+                    }
+                    .onAppear{
+                        print(order.item[index].keys)
                     }
                 }
             Spacer()
             }
         .padding(.leading)
-       
-        
         }
-    
 }

@@ -64,7 +64,6 @@ struct ItemDetailView: View {
                     for index in 0..<store.basket.count{
                         if store.basket[index].item == item{
                               i = index
-                                print(store.basket[i].item.name)
                             }
                     }
                     store.basket[i].quantity = itemCount
@@ -81,9 +80,6 @@ struct ItemDetailView: View {
             })
             
             Spacer()
-        }
-        .onAppear{
-            print(store.basket.count)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)).opacity(0.05).ignoresSafeArea())

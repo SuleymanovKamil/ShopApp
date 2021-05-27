@@ -16,6 +16,21 @@ struct ContentView: View {
             .environmentObject(store)
             .navigationBarHidden(true)
             .navigationBarTitle("")
+            .onAppear{
+    //            store.saveItemsToFirebase()
+                store.fetchAdmins()
+                    store.fetchCurrenUser()
+                if store.currentItems.isEmpty{
+                    store.fetchCategories()
+                    store.fetchPopularItems()
+                    store.fetchTitles()
+                }
+                if store.basket.isEmpty {
+                    store.fetchBasketFromFirebase()
+                    print("load basket")
+                }
+             
+        }
         }
     }
 }
